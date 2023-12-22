@@ -5,10 +5,10 @@ import { convertPriceToInt, toChunks } from "./helpers";
 import { writeFile } from "fs/promises";
 
 type Product = {
-  productName: string;
-  productPrice: number;
-  productImage: string;
-  productLink: string;
+  name: string;
+  price: number;
+  image: string;
+  link: string;
 };
 
 const loadPage = async (url: string): Promise<cheerio.CheerioAPI> => {
@@ -23,24 +23,25 @@ const getProducts = async (page: number): Promise<Product[]> => {
   const products: Product[] = [];
 
   $(".products .col-md-3.col-sm-4.col-6").each((index, element) => {
-    const productName = $(element)
+    const name = $(element)
       .find(".product-info .title-box a")
       .text()
       .trim();
-    const productPrice = convertPriceToInt(
+    const price = convertPriceToInt(
       $(element).find(".pric ins span").first().text().trim()
     );
-    const productImage = $(element).find(".pic-box img").attr("src") as string;
-    const productLink = $(element)
+    const image = $(element).find(".pic-box img").attr("src") as string;
+    const link = $(element)
       .find(".product-info .title-box a")
       .attr("href") as string;
 
     const product: Product = {
-      productName,
-      productPrice,
-      productImage,
-      productLink,
+      name: name,
+      price: price,
+      image: image,
+      link: link,
     };
+
     products.push(product);
   });
   return products;
@@ -57,8 +58,7 @@ const getTotalPages = async (): Promise<number> => {
     })
     .get();
 
-  const totalPages = Math.max(...pageNumbers);
-  return totalPages;
+  return Math.max(...pageNumbers);
 };
 
 const getAllProducts = async (): Promise<Product[]> => {
@@ -81,7 +81,7 @@ const getAllProducts = async (): Promise<Product[]> => {
 const csvExport = async (products: Product[]): Promise<string> => {
   const csv = products
     .map((product) => {
-      return `${product.productName},${product.productPrice},${product.productImage},${product.productLink}`;
+      return `${product.name},${product.price},${product.image},${product.link}`;
     })
     .join("\n");
 
@@ -92,7 +92,7 @@ const csvExport = async (products: Product[]): Promise<string> => {
   const products: Product[] = await getAllProducts();
 
   const sortedProducts: Product[] = products.sort((a, b) => {
-    return a.productLink.localeCompare(b.productLink);
+    return a.link.localeCompare(b.link);
   });
 
   const csv: string = await csvExport(sortedProducts);
