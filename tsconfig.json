@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+      "target": "ESNext",                // Specify ECMAScript target version
+      "module": "commonjs",           // Specify module code generation
+      "strict": true,                 // Enable all strict type-checking options
+      "esModuleInterop": true,        // Enables compatibility with Babel/ES6 module imports
+      "skipLibCheck": true,           // Skip type checking of declaration files
+      "outDir": "./dist"              // Specify output directory for compiled files
+    },
+    "include": ["./src/**/*"],        // Specify files to be included in compilation
+    "exclude": ["node_modules"]       // Exclude node_modules from compilation
+  }
+  
